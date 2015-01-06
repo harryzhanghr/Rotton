@@ -20,6 +20,11 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
     var isMovie: Bool = true
     var refreshControl: UIRefreshControl!
 
+    let movieURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=ggvjpt8kdbru4rsvc8nqp65q"
+//    let movieRequest = NSURLRequest(URL: NSURL(string: movieURL)!)
+    let dvdURL:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=ggvjpt8kdbru4rsvc8nqp65q"
+//    let dvdRequest = NSURLRequest(URL: NSURL(string: dvdURL)!)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -40,8 +45,26 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        if searchText  == "" {
+            loadTableContents()
+        } else {
+            print("hi")
+            var escapedSearchTerm = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+            var url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=\(escapedSearchTerm!)&page_limit=20&apikey=axku2sndnpg2d6dhjw59wj3d&country=us"
+            var request = NSURLRequest(URL: NSURL(string: url)!)
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+                if (error != nil) {
+                    return
+                }
+                var object = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
+                self.movies = object["movies"] as [NSDictionary]
+                self.myTable.reloadData()
+                self.tabBar.selectedItem = self.moviesBarItem
+            }
+
+        }
     }
+
     
     func loadTableContents() {
         var movieURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=ggvjpt8kdbru4rsvc8nqp65q"
@@ -50,6 +73,9 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
         var dvdRequest = NSURLRequest(URL: NSURL(string: dvdURL)!)
         if self.isMovie {
             NSURLConnection.sendAsynchronousRequest(movieRequest, queue: NSOperationQueue.mainQueue()) {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+                if (error != nil) {
+                    return
+                }
                 var object = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
                 self.movies = object["movies"] as [NSDictionary]
                 self.myTable.reloadData()
@@ -64,6 +90,7 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

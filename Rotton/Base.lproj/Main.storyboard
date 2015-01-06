@@ -77,6 +77,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="qzT-lC-20a"/>
+                                </connections>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -86,6 +89,7 @@
                         <outlet property="dvdsBarItem" destination="zKd-VI-dxR" id="kNN-lA-IqH"/>
                         <outlet property="moviesBarItem" destination="71Q-1f-UQe" id="TWu-LJ-WNY"/>
                         <outlet property="myTable" destination="SbU-C1-3Bk" id="i31-qM-Rlr"/>
+                        <outlet property="searchBar" destination="mW8-hy-yPl" id="Xak-TM-ieT"/>
                         <outlet property="tabBar" destination="bjo-oY-7Yr" id="dm1-Sl-Zt4"/>
                         <segue destination="ira-Hi-4rH" kind="push" identifier="movieDetailSeg" id="m3x-0f-IfP"/>
                     </connections>
@@ -105,17 +109,44 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ucC-0l-9jm">
                                 <rect key="frame" x="0.0" y="60" width="320" height="508"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="4z9-Nq-5I0" appends="YES" id="T9f-QA-j8t"/>
+                                </connections>
                             </imageView>
+                            <view contentMode="scaleToFill" id="7yB-os-KYa">
+                                <rect key="frame" x="0.0" y="401" width="320" height="167"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.77618016779999999" blue="0.46610632219999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="736-5t-zRA" appends="YES" id="h0u-Xe-911"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="l1K-eg-FXV"/>
                     <connections>
                         <outlet property="bgImage" destination="ucC-0l-9jm" id="BAt-rP-rmp"/>
+                        <outlet property="detailExpand" destination="736-5t-zRA" id="Zn9-JT-D6N"/>
+                        <outlet property="detailView" destination="7yB-os-KYa" id="hNN-sS-BDc"/>
+                        <outlet property="imageExpand" destination="4z9-Nq-5I0" id="vJS-hg-wMA"/>
                         <outlet property="movieTitle" destination="l1K-eg-FXV" id="AIg-vI-msW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lPy-cm-Qtj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="4z9-Nq-5I0">
+                    <connections>
+                        <outlet property="delegate" destination="ira-Hi-4rH" id="TYo-JD-LYb"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="736-5t-zRA">
+                    <connections>
+                        <outlet property="delegate" destination="ira-Hi-4rH" id="YiB-j8-WH8"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1071" y="337"/>
         </scene>
