@@ -10,16 +10,15 @@ import UIKit
 
 class MovieDetailViewController: UIViewController {
     
+    var cellInfo: MovieCell!
+    var mainVC: MovieViewController!
     
     @IBOutlet weak var bgImage: UIImageView!
+    @IBOutlet weak var movieTitle: UINavigationItem!
     
-    @IBAction func backButtonPressed(sender: UIBarButtonItem) {
-        self.navigationController?.popToRootViewControllerAnimated(true)
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 
@@ -28,8 +27,10 @@ class MovieDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUpImage(s: String) {
-        bgImage.setImageWithURL(NSURL(string: s))
+    func setUp() {
+        print(cellInfo.poster.image == nil)
+//        bgImage.image = cellInfo.poster.image
+        movieTitle.title = cellInfo.movieTitle.text
     }
     
 

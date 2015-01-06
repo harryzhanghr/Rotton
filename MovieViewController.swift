@@ -8,17 +8,42 @@
 
 import UIKit
 
-class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate{
+class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UISearchBarDelegate{
 
     @IBOutlet weak var myTable: UITableView!
-    
+    @IBOutlet weak var moviesBarItem: UITabBarItem!
+    @IBOutlet weak var dvdsBarItem: UITabBarItem!
+    @IBOutlet weak var tabBar: UITabBar!
+    @IBOutlet weak var searchBar: UISearchBar!
+
     var movies: [NSDictionary] = []
     var isMovie: Bool = true
+    var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        loadTableContents()
         
+        self.refreshControl = UIRefreshControl()
+        var attributedString = NSMutableAttributedString(string: "Pull down to refersh")
+        attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSMakeRange(0, attributedString.length))
+        self.refreshControl.attributedTitle = attributedString
+        self.refreshControl.tintColor = UIColor(red: 218.0/255.0, green: 165.0/255.0, blue: 32.0/255.0, alpha: 1.0)
+        self.refreshControl.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.myTable.addSubview(self.refreshControl)
+    }
+    
+    func refresh() {
+        loadTableContents()
+        self.refreshControl.endRefreshing()
+    }
+
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        
+    }
+    
+    func loadTableContents() {
         var movieURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=ggvjpt8kdbru4rsvc8nqp65q"
         var movieRequest = NSURLRequest(URL: NSURL(string: movieURL)!)
         var dvdURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=ggvjpt8kdbru4rsvc8nqp65q"
@@ -28,20 +53,18 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
                 var object = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
                 self.movies = object["movies"] as [NSDictionary]
                 self.myTable.reloadData()
+                self.tabBar.selectedItem = self.moviesBarItem
             }
         } else {
             NSURLConnection.sendAsynchronousRequest(dvdRequest, queue: NSOperationQueue.mainQueue()) {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
                 var object = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
                 self.movies = object["movies"] as [NSDictionary]
                 self.myTable.reloadData()
+                self.tabBar.selectedItem = self.dvdsBarItem
             }
         }
     }
     
-//    func urlCompletionHelper(response: NSURLResponse!, data: NSData!, error: NSError!) {
-//        var obejct = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
-//    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -64,27 +87,31 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("movieDetailSeg", sender: self)
+        myTable.deselectRowAtIndexPath(indexPath, animated: false)
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "movieDetailSeg" {
             let detailVC = segue.destinationViewController as MovieDetailViewController
+            detailVC.mainVC = self
             let indexPath: NSIndexPath = myTable.indexPathForSelectedRow()!
-            var movie = movies[indexPath.row]
-            var posters = movie["posters"] as NSDictionary
-            var posterURL = posters["thumbnail"] as String
-            print(posterURL)
-            detailVC.bgImage.setImageWithURL(NSURL(string: posterURL))
+//            var movie = movies[indexPath.row]
+//            var posters = movie["posters"] as NSDictionary
+//            var posterURL = posters["thumbnail"] as String
+//            print(posterURL)
+            detailVC.cellInfo = myTable.cellForRowAtIndexPath(indexPath) as MovieCell
+            detailVC.setUp()
+//            detailVC.bgImage.setImageWithURL(NSURL(string: posterURL))
         }
     }
     
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
         if item.title == "Movies" {
             isMovie = true
-            viewDidLoad()
+            loadTableContents()
         } else if item.title == "DVDs" {
             isMovie = false
-            viewDidLoad()
+            loadTableContents()
         }
     }
     
