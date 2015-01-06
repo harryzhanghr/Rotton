@@ -5,7 +5,11 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
+<<<<<<< HEAD
 	<string>DFBB7778-1721-4F3B-83EA-3D31329FFC36</string>
+=======
+	<string>4D86DAEC-A9FD-4A26-9C86-9962FD97EADB</string>
+>>>>>>> FETCH_HEAD
 	<key>IDESourceControlProjectName</key>
 	<string>Rotton</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
