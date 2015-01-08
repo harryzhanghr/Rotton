@@ -133,6 +133,7 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
+        println(item)
         if item.title == "Movies" {
             isMovie = true
             loadTableContents()
